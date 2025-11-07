@@ -1,0 +1,94 @@
+# 默认配置值
+
+# 镜像配置
+image:
+  registry: ghcr.io
+  repository: terryso/nof1-tracker
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+# 部署配置
+replicaCount: 1
+
+# 资源限制
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi
+
+# 自动扩缩容
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+# 服务配置
+service:
+  type: ClusterIP
+  port: 80
+
+# Ingress配置
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: nof1-tracker.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+# 环境变量配置
+env:
+  # 日志级别
+  LOG_LEVEL: "INFO"
+  # 是否启用测试网
+  BINANCE_TESTNET: "true"
+  # 是否启用Telegram通知
+  TELEGRAM_ENABLED: "false"
+
+# 密钥配置
+secrets:
+  # Binance API配置
+  binance:
+    apiKey: ""
+    apiSecret: ""
+  # Telegram配置
+  telegram:
+    botToken: ""
+    chatId: ""
+
+# 持久化存储
+persistence:
+  enabled: false
+  storageClass: ""
+  accessMode: ReadWriteOnce
+  size: 1Gi
+
+# 节点选择
+nodeSelector: {}
+
+# 容忍度
+tolerations: []
+
+# 亲和性
+affinity: {}
+
+# Pod安全上下文
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1001
+  fsGroup: 1001
+
+# 容器安全上下文
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+    - ALL

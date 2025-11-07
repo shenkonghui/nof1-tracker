@@ -66,6 +66,8 @@ npm start -- profit
 - **⚡ 合约交易**: 完整支持Binance USDT永续合约，支持1x-125x杠杆
 - **📈 盈利统计**: 精确的盈利分析，基于真实交易数据计算（含手续费统计）
 - **🛡️ 风险控制**: 支持`--risk-only`模式，只观察不执行交易
+- **🐳 Docker支持**: 提供Docker镜像，支持容器化部署
+- **☸️ Kubernetes部署**: 提供Helm Chart，支持Kubernetes集群部署
 
 ## 📊 实盘跟踪
 
@@ -98,7 +100,7 @@ Dashboard项目地址: https://github.com/terryso/nof1-tracker-dashboard
 1. 首先先注册一个币安帐号: https://www.maxweb.red/referral/earn-together/refer2earn-usdc/claim?hl=zh-CN&ref=GRO_28502_ACBRJ&utm_source=default
 2. 登录 [Binance](https://www.binance.com/) → [API Management](https://www.binance.com/en/my/settings/api-management)
 3. 创建新API密钥，完成安全验证
-   
+
 
 #### 配置权限（关键）
 - ✅ **Enable Futures** - 启用合约交易（必选）
@@ -556,6 +558,91 @@ npm run lint
 - **[快速参考手册](./docs/quick-reference.md)** - 常用命令快速查询
 - **[自动重新跟单功能说明](./docs/auto-refollow-manual-close.md)** - 手工平仓检测和自动重新跟单详细说明
 - **[数据提供者抽象层](./docs/data-provider-abstraction.md)** - 如何切换到其他数据源（当 nof1 API 停用时）
+- **[部署指南](./docs/deployment-guide.md)** - Docker和Kubernetes部署详细指南
+
+## 🐳 Docker部署
+
+### 使用预构建镜像
+
+```bash
+# 拉取镜像
+docker pull ghcr.io/terryso/nof1-tracker:latest
+
+# 运行容器
+docker run -d \
+  --name nof1-tracker \
+  -e BINANCE_API_KEY="your_api_key" \
+  -e BINANCE_API_SECRET="your_api_secret" \
+  -e BINANCE_TESTNET="true" \
+  ghcr.io/terryso/nof1-tracker:latest \
+  follow deepseek-chat-v3.1 --interval 30
+```
+
+### 自定义构建
+
+```bash
+# 克隆仓库
+git clone https://github.com/terryso/nof1-tracker.git
+cd nof1-tracker
+
+# 构建镜像
+docker build -t nof1-tracker .
+
+# 运行容器
+docker run -d \
+  --name nof1-tracker \
+  -e BINANCE_API_KEY="your_api_key" \
+  -e BINANCE_API_SECRET="your_api_secret" \
+  -e BINANCE_TESTNET="true" \
+  nof1-tracker \
+  follow gpt-5 --interval 30
+```
+
+## ☸️ Kubernetes部署
+
+### 使用Helm Chart
+
+```bash
+# 添加Helm仓库（如果已发布）
+helm repo add nof1-tracker https://terryso.github.io/nof1-tracker
+helm repo update
+
+# 安装
+helm install my-nof1-tracker nof1-tracker/nof1-tracker
+
+# 或者从源码安装
+git clone https://github.com/terryso/nof1-tracker.git
+cd nof1-tracker/helm/nof1-tracker
+helm install my-nof1-tracker . -f values.yaml
+```
+
+### 配置密钥
+
+创建Secret文件：
+
+```yaml
+# secrets.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: nof1-tracker-secrets
+type: Opaque
+stringData:
+  BINANCE_API_KEY: "your_api_key"
+  BINANCE_API_SECRET: "your_api_secret"
+  TELEGRAM_BOT_TOKEN: "your_telegram_bot_token"
+  TELEGRAM_CHAT_ID: "your_telegram_chat_id"
+```
+
+应用Secret：
+
+```bash
+kubectl apply -f secrets.yaml
+```
+
+### 详细部署指南
+
+更多关于Docker和Kubernetes部署的详细信息，请参考：**[部署指南](./docs/deployment-guide.md)**
 
 ## ⭐ Star History
 

@@ -1,0 +1,19 @@
+apiVersion: v2
+name: nof1-tracker
+description: A Helm chart for nof1-tracker - AI Agent 跟单交易系统
+type: application
+version: 0.1.0
+appVersion: "1.1.1"
+keywords:
+  - trading
+  - binance
+  - futures
+  - cryptocurrency
+  - ai-agent
+  - nof1
+home: https://github.com/terryso/nof1-tracker
+sources:
+  - https://github.com/terryso/nof1-tracker
+maintainers:
+  - name: Nof1 Trading Team
+    email: support@nof1.ai

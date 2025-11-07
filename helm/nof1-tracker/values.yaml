@@ -16,15 +16,35 @@ serviceAccount:
   annotations: {}
   name: ""
 
+# AI模型配置
+model:
+  # 要跟随的AI模型名称
+  name: "deepseek-chat-v3.1"
+  # 轮询间隔（秒）
+  interval: 30
+  # 风险控制模式（只观察不执行交易）
+  riskOnly: false
+  # 价格容差百分比
+  priceTolerance: 1.0
+  # 总保证金（USDT）
+  totalMargin: 10
+  # 每个币种固定保证金（USDT）
+  fixedAmountPerCoin: ""
+  # 盈利目标百分比
+  profit: ""
+  # 是否自动重新跟单
+  autoRefollow: false
+  # 保证金模式：ISOLATED（逐仓）或 CROSSED（全仓）
+  marginType: "CROSSED"
+
 # 运行命令配置
 command:
-  # 默认命令，如果为空则使用Dockerfile中的CMD
+  # 是否启用命令配置
   enabled: true
-  args:
-    - "follow"
-    - "deepseek-chat-v3.1"
-    - "--interval"
-    - "30"
+  # 自动从model配置生成命令参数
+  autoGenerate: true
+  # 手动指定命令参数（如果autoGenerate为false）
+  args: []
 
 # 资源限制
 resources:

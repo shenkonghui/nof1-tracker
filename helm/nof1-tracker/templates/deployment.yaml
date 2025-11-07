@@ -14,6 +14,7 @@ spec:
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        checksum/model: {{ .Values.model | toYaml | sha256sum }}
       labels:
         {{- include "nof1-tracker.selectorLabels" . | nindent 8 }}
     spec:
@@ -28,7 +29,40 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           {{- if .Values.command.enabled }}
           args:
+            {{- if .Values.command.autoGenerate }}
+            - "follow"
+            - {{ .Values.model.name | quote }}
+            - "--interval"
+            - {{ .Values.model.interval | quote }}
+            {{- if .Values.model.riskOnly }}
+            - "--risk-only"
+            {{- end }}
+            {{- if .Values.model.priceTolerance }}
+            - "--price-tolerance"
+            - {{ .Values.model.priceTolerance | quote }}
+            {{- end }}
+            {{- if .Values.model.totalMargin }}
+            - "--total-margin"
+            - {{ .Values.model.totalMargin | quote }}
+            {{- end }}
+            {{- if .Values.model.fixedAmountPerCoin }}
+            - "--fixed-amount-per-coin"
+            - {{ .Values.model.fixedAmountPerCoin | quote }}
+            {{- end }}
+            {{- if .Values.model.profit }}
+            - "--profit"
+            - {{ .Values.model.profit | quote }}
+            {{- end }}
+            {{- if .Values.model.autoRefollow }}
+            - "--auto-refollow"
+            {{- end }}
+            {{- if .Values.model.marginType }}
+            - "--margin-type"
+            - {{ .Values.model.marginType | quote }}
+            {{- end }}
+            {{- else }}
             {{- toYaml .Values.command.args | nindent 12 }}
+            {{- end }}
           {{- end }}
           envFrom:
             - configMapRef:

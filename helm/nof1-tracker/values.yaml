@@ -3,12 +3,18 @@
 # 镜像配置
 image:
   registry: ghcr.io
-  repository: terryso/nof1-tracker
+  repository: shenkonghui/nof1-tracker
   pullPolicy: IfNotPresent
-  tag: "latest"
+  tag: "dev"
 
 # 部署配置
 replicaCount: 1
+
+# 服务账户配置
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
 
 # 资源限制
 resources:
@@ -18,30 +24,6 @@ resources:
   requests:
     cpu: 250m
     memory: 256Mi
-
-# 自动扩缩容
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-
-# 服务配置
-service:
-  type: ClusterIP
-  port: 80
-
-# Ingress配置
-ingress:
-  enabled: false
-  className: ""
-  annotations: {}
-  hosts:
-    - host: nof1-tracker.local
-      paths:
-        - path: /
-          pathType: Prefix
-  tls: []
 
 # 环境变量配置
 env:
@@ -62,13 +44,6 @@ secrets:
   telegram:
     botToken: ""
     chatId: ""
-
-# 持久化存储
-persistence:
-  enabled: false
-  storageClass: ""
-  accessMode: ReadWriteOnce
-  size: 1Gi
 
 # 节点选择
 nodeSelector: {}

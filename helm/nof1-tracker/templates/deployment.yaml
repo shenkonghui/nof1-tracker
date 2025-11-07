@@ -5,9 +5,7 @@ metadata:
   labels:
     {{- include "nof1-tracker.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
-  {{- end }}
   selector:
     matchLabels:
       {{- include "nof1-tracker.selectorLabels" . | nindent 6 }}
@@ -19,10 +17,6 @@ spec:
       labels:
         {{- include "nof1-tracker.selectorLabels" . | nindent 8 }}
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       serviceAccountName: {{ include "nof1-tracker.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
@@ -39,17 +33,6 @@ spec:
                 name: {{ include "nof1-tracker.fullname" . }}-secret
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- if .Values.persistence.enabled }}
-          volumeMounts:
-            - name: storage
-              mountPath: /app/data
-          {{- end }}
-      {{- if .Values.persistence.enabled }}
-      volumes:
-        - name: storage
-          persistentVolumeClaim:
-            claimName: {{ include "nof1-tracker.fullname" . }}-pvc
-      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

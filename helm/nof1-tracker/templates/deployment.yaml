@@ -26,6 +26,10 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.command.enabled }}
+          args:
+            {{- toYaml .Values.command.args | nindent 12 }}
+          {{- end }}
           envFrom:
             - configMapRef:
                 name: {{ include "nof1-tracker.fullname" . }}-config

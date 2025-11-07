@@ -16,6 +16,16 @@ serviceAccount:
   annotations: {}
   name: ""
 
+# 运行命令配置
+command:
+  # 默认命令，如果为空则使用Dockerfile中的CMD
+  enabled: true
+  args:
+    - "follow"
+    - "deepseek-chat-v3.1"
+    - "--interval"
+    - "30"
+
 # 资源限制
 resources:
   limits:

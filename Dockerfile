@@ -42,5 +42,6 @@ USER nodejs
 # 暴露端口（如果需要）
 # EXPOSE 3000
 
-# 设置入口点
+# 设置入口点和默认命令
 ENTRYPOINT ["node", "dist/index.js"]
+CMD ["follow", "deepseek-chat-v3.1", "--interval", "30"]
